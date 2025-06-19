@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Бандаж</title>	
+		<link rel="stylesheet" href="./style_band1.css">
+		<link rel="stylesheet" href="./fonts/fonts.css">
+		<link rel="stylesheet" href="./slider/flickity.css">
+		<script src="slider/jquery-3.6.3.min.js"></script>
+		<script src="./flickity.pkgd.min.js"></script>
+		<link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
+		<link rel="mask-icon" href="./favicon/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+	</head>
+	<body>
+		<header>
+			<div class="logo">
+				<a href="index.html"><img src="slider/img/logo_small.png" alt="Логотип компании" width="88" height="45"></a>
+			</div>
+			<nav class="menu">
+				<a href="index.html">ГЛАВНАЯ</a>	
+				<a href="#portfolio">НОВОСТИ</a>
+				<a href="#advantages">О НАС</a>
+				<a href="order.html">ЗАКАЗ</a>
+				<a href="#callback">СВЯЗАТЬСЯ</a>
+			</nav>
+			<svg class="burger" viewBox="0 0 32 22"><use xlink:href="#burger"></use></svg>
+		</header>
+        <div class="product-card">
+            <img src="slider/img/band4.jpg" alt="Название товара" class="product-image">
+            <div class="product-title">Противогрыжевый бандаж при вентральных грыжах Т.26.12<br><strong>2360₽</strong></div>
+       
+            <div class="product-specs">
+                <div class="spec-item">
+                    <span class="spec-name">Бренд:</span>
+                    <span class="spec-value">Trives</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-name">Страна:</span>
+                    <span class="spec-value">Россия</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-name">Материал:</span>
+                    <span class="spec-value"> Полиамид — 40%; полиэстер — 25%; пенополиуретан — 20%; эластан — 15%</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-name">Описание:</span>
+                    <span class="spec-value"> высота бандажа 20 см; оптимален для лечения и профилактики послеоперационных грыжевых выпячиваний; в конструкции бандажей предусмотрены две разгружающие пластины на поясничной области, дополнительная стяжка и съемный аппликатор для надежной фиксации грыжевого выпячивания.</span>
+                </div>
+            </div>
+            <form class="add-to-cart-form">
+				<input type="hidden" name="product_id" value="1">
+				<input type="hidden" name="product_name" value="Корсет">
+				<input type="hidden" name="price" value="2999">
+
+				<div class="size-selector">
+					<p>Выберите размер:</p>
+					<div class="size-options">
+					<label class="size-option">
+						<input type="radio" name="size" value="S" checked>
+						<span>S</span>
+					</label>
+					<label class="size-option">
+						<input type="radio" name="size" value="M">
+						<span>M</span>
+					</label>
+					<label class="size-option">
+						<input type="radio" name="size" value="L">
+						<span>L</span>
+					</label>
+					<label class="size-option">
+						<input type="radio" name="size" value="XL">
+						<span>XL</span>
+					</label>
+				</div>
+			</form>
+				<button class="add-to-cart" 
+					data-product-id="5" 
+					data-product-name="Противогрыжевый бандаж" 
+					data-price="2360" 
+					data-image="slider/img/band4.jpg">
+					Добавить в корзину
+				</button>
+        </div>
+            <script>
+				document.addEventListener('DOMContentLoaded', function() {
+					// Обработка кликов по кнопкам "Добавить в корзину"
+					document.addEventListener('click', function(e) {
+						if (e.target.classList.contains('add-to-cart')) {
+							const button = e.target;
+							const product = {
+								id: button.getAttribute('data-product-id'),
+								name: button.getAttribute('data-product-name'),
+								price: button.getAttribute('data-price'),
+								image: button.getAttribute('data-image'),
+								quantity: 1
+							};
+							
+							addToCart(product);
+							showCartNotification(product.name);
+							updateCartCounter();
+						}
+					});
+					function addToCart(product) {
+						const selectedSize = document.querySelector('input[name="size"]:checked').value;
+						product.size = selectedSize;
+						
+						let cart = JSON.parse(localStorage.getItem('cart')) || [];
+						
+						// Проверяем, есть ли уже такой товар с таким же размером
+						const existingItem = cart.find(item => 
+							item.id === product.id && item.size === product.size);
+						
+						if (existingItem) {
+							existingItem.quantity += 1;
+						} else {
+							cart.push(product);
+						}
+						
+						localStorage.setItem('cart', JSON.stringify(cart));
+					}
+					
+					
+				
+					// Показ уведомления
+					function showCartNotification(productName) {
+						const notification = document.createElement('div');
+						notification.className = 'cart-notification';
+						notification.innerHTML = `Товар "${productName}" добавлен в корзину!`;
+						document.body.appendChild(notification);
+						
+						setTimeout(() => {
+							notification.classList.add('fade-out');
+							setTimeout(() => notification.remove(), 500);
+						}, 2000);
+					}
+				
+					// Обновление счетчика корзины
+					function updateCartCounter() {
+						const cart = JSON.parse(localStorage.getItem('cart')) || [];
+						const counter = document.querySelector('.cart-counter');
+						
+						if (counter) {
+							counter.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+						}
+					}
+				});
+			</script>
+            
+            
+        </div>
+		<footer>
+			<div class="col-1">
+				<div class="logo">
+					<img src="slider/img/logo_small.png" alt="Логотип компании" width="88" height="45">
+				</div>
+			</div>
+			
+			<div class="col-2">
+				<h2>Институт Движения</h2>
+				<nav>
+					<a href="#">Главная</a>
+					<a href="#service">Ортопедия</a>	
+					<a href="#portfolio">Новости</a>
+					<a href="#advantages">О нас</a>
+					<a href="#contacts">Заказ</a>
+					<a href="#callback">Связаться</a>
+				</nav>
+			</div>
+
+			<div class="col-3">
+				<div class="footer-icons">
+					<svg viewBox="0 0 61 61" alt="Логотип"><use xlink:href="#instagram"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#facebook"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#vkontakte"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#youtube"></use></svg>
+				</div>
+				<a href="mailto:konchits_2003@mail.ru">Почта: konchits_2003@mail.ru</a>
+				<a href="tel:8 (912) 866 70 71">Телефон: 8 (912) 866 70 71 </a>		
+			</div>		
+		</footer>
+		<div class="popup-overlay"></div>
+		<div class="mobile-menu">
+			<div class="menu-content">
+				<div class="mobile-menu-header">Институт Движения</div>
+				<div class="close-button"><svg viewBox="0 0 10 10"><use xlink:href="#cross"></use></svg></div>
+				<div class="mobile-menu-items">
+					<a href="index.html" class="close">Ортопедия</a>
+					<a href="index.html" class="close">Новости</a>
+					<a href="index.html" class="close">О нас</a>
+					<a href="cart.html" class="close">Заказ</a>
+					<a href="index.html" class="close">Связаться</a>	
+				</div>
+				<div class="footer-icons">
+					<svg viewBox="0 0 61 61" alt="Логотип"><use xlink:href="#instagram"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#facebook"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#vkontakte"></use></svg>
+					<svg viewBox="0 0 62 61" alt="Логотип"><use xlink:href="#youtube"></use></svg>
+				</div>
+				<div class="mobile-menu-contacts">
+					<a href="mailto: konchits_2003@mail.ru">Почта: konchits_2003@mail.ru</a>
+					<a href="tel:8 (912) 866 70 71">Телефон: 8 (912) 866 70 71</a>		
+				</div>
+			</div>
+		</div>
+		<div class="btn-up btn-up_hide"></div>	
+			
+    </body>
+    
+    <script>
+		jQuery(document).ready(function(){
+
+		$( "#form-popup, #form-big" ).submit(function( event ) {
+			$(location).attr('href','./thank.html')
+		event.preventDefault();
+			});
+			
+
+			$('.main-carousel').flickity({
+				cellAlign: 'left',
+				contain: true,
+				freeScroll: true,
+				wrapAround: true,
+				autoPlay: 1500,
+				groupCells: 3,
+				prevNextButtons: false,
+			});
+			
+			$('.popup-show').click(function() { 
+				$('.popup').show(); 
+				$('.popup-overlay').show(); 
+			})
+			
+			$('.burger').click(function() { 
+				$('.mobile-menu').show(); 
+			})
+			
+			$('.popup-overlay, .close-button, .close').click(function() { 
+				$('.popup-overlay, .popup, .mobile-menu').hide(); 
+			})
+
+		});
+
+	</script>
+    <script>
+		const btnUp = {
+		el: document.querySelector('.btn-up'),
+		show() {
+			this.el.classList.remove('btn-up_hide');
+		},
+		hide() {
+			this.el.classList.add('btn-up_hide');
+		},
+		addEventListener() {
+			window.addEventListener('scroll', () => {
+			const scrollY = window.scrollY || document.documentElement.scrollTop;
+			scrollY > 400 ? this.show() : this.hide();
+			});
+			document.querySelector('.btn-up').onclick = () => {
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'smooth'
+			});
+			}
+		}
+		}
+		btnUp.addEventListener();
+  </script>
+
+	<svg xmlns="http://www.w3.org/2000/svg" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;display: none;fill-rule:evenodd;clip-rule:evenodd; display:none" xml:space="preserve" >
+		<defs>
+			<g id="contact-1">
+				<path fill="currentColor" d="M19.527 7.226c-.103-.388-.313-.8-.468-1.162C17.201 1.6 13.142 0 9.865 0 5.477 0 .645 2.942 0 9.006v1.24c0 .05.018.515.043.747.362 2.89 2.642 5.962 4.345 8.852 1.833 3.096 3.734 6.142 5.618 9.187 1.161-1.987 2.319-4 3.454-5.935.309-.568.668-1.136.978-1.678.206-.361.6-.722.78-1.058C17.052 17.006 20 13.626 20 10.297V8.929c0-.36-.447-1.625-.473-1.703Zm-9.582 6.22c-1.29 0-2.701-.646-3.398-2.427-.104-.283-.095-.851-.095-.903v-.8c0-2.27 1.927-3.303 3.604-3.303 2.065 0 3.662 1.652 3.662 3.716 0 2.065-1.708 3.716-3.773 3.716Z"/>
+			</g>
+			<g id="contact-2">
+				<path fill="currentColor" d="m24.44 19.73-3.861-3.862c-.77-.766-2.043-.743-2.839.053l-1.945 1.945-.384-.214c-1.228-.68-2.91-1.613-4.678-3.383-1.774-1.774-2.708-3.458-3.39-4.687-.073-.13-.142-.256-.21-.375l1.305-1.304.642-.642c.797-.798.82-2.07.052-2.839L5.272.56c-.768-.767-2.042-.744-2.84.054L1.346 1.708l.03.03a6.292 6.292 0 0 0-.897 1.581 6.557 6.557 0 0 0-.4 1.604C-.43 9.15 1.5 13.013 6.743 18.253c7.245 7.245 13.084 6.698 13.335 6.671a6.524 6.524 0 0 0 1.61-.404 6.27 6.27 0 0 0 1.575-.893l.024.022 1.102-1.08c.795-.797.818-2.07.051-2.84Z"/>
+			</g>
+			<g id="contact-3">
+				<path fill="currentColor" fill-rule="evenodd" d="M0 12.5C0 5.607 5.607 0 12.5 0 19.392 0 25 5.607 25 12.5 25 19.392 19.392 25 12.5 25 5.607 25 0 19.392 0 12.5Zm2.66 0c0 5.427 4.414 9.84 9.84 9.84s9.84-4.413 9.84-9.84c0-5.426-4.414-9.84-9.84-9.84S2.66 7.074 2.66 12.5Z" clip-rule="evenodd"/><path fill="currentColor" d="M19.015 12.114h-5.618V5.36a1.03 1.03 0 0 0-2.059 0v7.783c0 .569.461 1.03 1.03 1.03h6.647a1.03 1.03 0 0 0 0-2.059Z"/>
+			</g>
+			<g id="burger">
+				<path fill="currentColor" fill-rule="evenodd" d="M31.291 1.721a1.5 1.5 0 0 1-1.5 1.5H2.305a1.5 1.5 0 1 1 0-3h27.488a1.5 1.5 0 0 1 1.5 1.5ZM31.291 11a1.5 1.5 0 0 1-1.5 1.5H2.305a1.5 1.5 0 0 1 0-3h27.488a1.5 1.5 0 0 1 1.5 1.5ZM31.291 20.279a1.5 1.5 0 0 1-1.5 1.5H2.305a1.5 1.5 0 0 1 0-3h27.488a1.5 1.5 0 0 1 1.5 1.5Z" clip-rule="evenodd"/>	</g>
+			<g id="cross">
+				<path fill="#C3B9B5" fill-rule="evenodd" d="M9.465.535a.657.657 0 0 1 0 .93l-8 8a.657.657 0 0 1-.93-.93l8-8a.657.657 0 0 1 .93 0Z" clip-rule="evenodd"/><path fill="#C3B9B5" fill-rule="evenodd" d="M.535.535a.657.657 0 0 1 .93 0l8 8a.657.657 0 0 1-.93.93l-8-8a.657.657 0 0 1 0-.93Z" clip-rule="evenodd"/>	</g>	
+			
+			<g id="instagram">
+				<path fill="currentColor" d="M36.36 30.5a5.86 5.86 0 1 1-11.72 0 5.86 5.86 0 0 1 11.72 0Z"/><path fill="currentColor" fill-rule="evenodd" d="M44.065 20.274a5.451 5.451 0 0 0-1.316-2.023 5.448 5.448 0 0 0-2.023-1.316c-.62-.24-1.551-.527-3.266-.605-1.856-.085-2.412-.103-7.11-.103s-5.254.018-7.11.102c-1.715.079-2.647.365-3.266.606a5.443 5.443 0 0 0-2.023 1.316 5.455 5.455 0 0 0-1.317 2.023c-.24.62-.527 1.552-.605 3.267-.085 1.855-.103 2.412-.103 7.11 0 4.697.018 5.254.103 7.11.078 1.715.365 2.646.605 3.266a5.454 5.454 0 0 0 1.317 2.023 5.447 5.447 0 0 0 2.022 1.316c.62.241 1.552.528 3.268.606 1.855.084 2.41.102 7.108.102 4.7 0 5.255-.018 7.11-.102 1.715-.078 2.647-.365 3.267-.606a5.826 5.826 0 0 0 3.34-3.34c.24-.62.526-1.55.605-3.266.085-1.855.102-2.412.102-7.11 0-4.697-.017-5.254-.102-7.109-.078-1.715-.365-2.647-.606-3.267ZM30.35 39.684a9.034 9.034 0 1 1 0-18.069 9.034 9.034 0 0 1 9.034 9.035 9.034 9.034 0 0 1-9.034 9.034Zm7.28-18.425a2.111 2.111 0 1 0 4.223 0 2.111 2.111 0 0 0-4.223 0Z" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M30.5 0C13.658 0 0 13.658 0 30.5S13.658 61 30.5 61 61 47.342 61 30.5 47.342 0 30.5 0Zm17.408 37.72c-.085 1.865-.381 3.138-.814 4.252a8.956 8.956 0 0 1-5.122 5.122c-1.114.433-2.387.729-4.251.814-1.868.085-2.464.106-7.22.106-4.757 0-5.354-.02-7.222-.106-1.863-.085-3.137-.381-4.25-.814a8.582 8.582 0 0 1-3.103-2.02 8.585 8.585 0 0 1-2.02-3.102c-.432-1.114-.729-2.387-.814-4.251-.086-1.868-.106-2.465-.106-7.221s.02-5.353.106-7.22c.085-1.865.38-3.138.813-4.252a8.58 8.58 0 0 1 2.021-3.102 8.58 8.58 0 0 1 3.102-2.02c1.114-.433 2.387-.729 4.251-.814 1.868-.085 2.465-.106 7.221-.106s5.353.02 7.22.106c1.865.085 3.138.381 4.252.813a8.585 8.585 0 0 1 3.102 2.021 8.583 8.583 0 0 1 2.02 3.102c.433 1.114.73 2.387.814 4.251.086 1.868.106 2.465.106 7.221s-.02 5.353-.106 7.22Z" clip-rule="evenodd"/>
+			</g>
+			<g id="facebook">
+				<path fill="currentColor" fill-rule="evenodd" d="M.25 30.5C.25 13.656 13.906 0 30.75 0s30.5 13.653 30.5 30.5c0 16.844-13.656 30.5-30.5 30.5S.25 47.344.25 30.5Zm33.386 0 4.998-.004.667-6.306h-5.673l.008-3.157c0-1.643.114-2.523 2.474-2.523h3.157V12.2h-5.048c-6.058 0-7.453 3.13-7.453 8.277l.008 3.713-4.576.004V30.5h4.575v18.3h6.86l.003-18.3Z" clip-rule="evenodd"/>
+			</g>
+			<g id="vkontakte">
+				<path fill="currentColor" fill-rule="evenodd" d="M61.5 30.5C61.5 47.345 47.845 61 31 61S.5 47.345.5 30.5 14.155 0 31 0s30.5 13.655 30.5 30.5ZM31.42 44.13h-2.37s-5.23.318-9.835-4.531c-5.022-5.288-9.458-15.782-9.458-15.782s-.255-.688.022-1.021c.313-.374 1.163-.398 1.163-.398l5.665-.038s.534.09.917.375c.314.233.491.671.491.671s.916 2.342 2.128 4.46c2.367 4.137 3.47 5.041 4.273 4.598 1.171-.646.82-5.847.82-5.847s.021-1.887-.59-2.728c-.473-.652-1.365-.841-1.759-.895-.319-.043.204-.791.883-1.127 1.02-.505 2.82-.534 4.947-.512 1.657.017 2.134.122 2.782.28 1.504.367 1.457 1.543 1.356 4.082-.03.758-.065 1.638-.065 2.655 0 .228-.007.472-.014.723-.035 1.3-.075 2.788.771 3.341.434.283 1.495.043 4.15-4.516 1.259-2.16 2.202-4.701 2.202-4.701s.206-.453.527-.647c.327-.198.77-.137.77-.137l5.961-.038s1.792-.216 2.082.602c.304.858-.67 2.862-3.105 6.145-2.315 3.12-3.439 4.265-3.332 5.28.078.74.809 1.41 2.208 2.723 2.934 2.755 3.716 4.201 3.902 4.545.015.028.026.049.035.062 1.313 2.203-1.457 2.375-1.457 2.375l-5.295.075s-1.138.228-2.636-.813c-.783-.543-1.548-1.43-2.278-2.276-1.115-1.293-2.145-2.488-3.025-2.206-1.476.473-1.43 3.69-1.43 3.69s.011.686-.325 1.052c-.366.399-1.082.478-1.082.478Z" clip-rule="evenodd"/>
+			</g>
+			<g id="youtube">
+				<path fill="currentColor" d="m37.372 30.5-9.921 5.714V24.786l9.921 5.714Z"/><path fill="currentColor" fill-rule="evenodd" d="M31.25 0C14.408 0 .75 13.658.75 30.5S14.408 61 31.25 61s30.5-13.658 30.5-30.5S48.092 0 31.25 0Zm19.058 30.531s0 6.186-.785 9.168a4.776 4.776 0 0 1-3.36 3.36c-2.982.785-14.913.785-14.913.785s-11.9 0-14.914-.816a4.777 4.777 0 0 1-3.36-3.36c-.784-2.951-.784-9.168-.784-9.168s0-6.185.785-9.168c.44-1.632 1.758-2.951 3.36-3.39 2.982-.786 14.913-.786 14.913-.786s11.93 0 14.913.817a4.777 4.777 0 0 1 3.36 3.36c.816 2.982.785 9.198.785 9.198Z" clip-rule="evenodd"/>
+			</g>	
+		</defs>	
+	</svg>
+</html>
